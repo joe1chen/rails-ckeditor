@@ -76,9 +76,20 @@ module Ckeditor
         output_buffer << ActionView::Base::InstanceTag.new(object, field, self, var).to_text_area_tag(textarea_options)
       end
       
-      output_buffer << javascript_tag("CKEDITOR.replace('#{object}[#{field}]', { 
+      js = <<-JS
+        if (CKEDITOR.instances.#{object}_#{field}_editor) {
+          var oldEditor = CKEDITOR.instances['#{object}_#{field}_editor'];
+          if (oldEditor) {
+            CKEDITOR.remove(oldEditor);
+          }
+        }
+        
+        CKEDITOR.replace('#{object}[#{field}]', { 
           #{ckeditor_applay_options(ckeditor_options)}
-        });\n")
+        });
+      JS
+      
+      output_buffer << javascript_tag(js)
         
       output_buffer
     end
