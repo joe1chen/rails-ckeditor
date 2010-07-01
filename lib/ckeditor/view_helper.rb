@@ -83,6 +83,9 @@ module Ckeditor
           var oldEditor = CKEDITOR.instances['#{object}_#{field}_editor'];
           if (oldEditor) {
             CKEDITOR.remove(oldEditor);
+            if (oldEditor) {
+              oldEditor.destroy();
+            }
           }
         }
         
